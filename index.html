@@ -4,8 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Birthday Wish</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.2.4/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
         .hidden {
             display: none;
         }
@@ -24,33 +30,46 @@
             50% { background-color: #fad0c4; }
             100% { background-color: #ff9a9e; }
         }
+        .confetti-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+<body class="bg-light bg-animation d-flex align-items-center justify-content-center" style="position: relative;">
 
-    <div id="form-container" class="w-full max-w-lg mx-auto p-6 bg-white rounded-lg shadow-lg">
-        <h2 class="text-2xl font-bold mb-4 text-center">Happy Birthday!</h2>
+    <!-- Form Container -->
+    <div id="form-container" class="w-100 max-w-lg p-4 bg-white rounded-lg shadow-lg">
+        <h2 class="text-center mb-4">Happy Birthday!</h2>
         <form id="birthday-form">
-            <div class="mb-4">
-                <label for="name" class="block text-gray-700">Name:</label>
-                <input type="text" id="name" name="name" required class="w-full p-2 border border-gray-300 rounded-md">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required class="form-control">
             </div>
-            <div class="mb-4">
-                <label for="dob" class="block text-gray-700">Date of Birth:</label>
-                <input type="date" id="dob" name="dob" required class="w-full p-2 border border-gray-300 rounded-md">
+            <div class="form-group">
+                <label for="dob">Date of Birth:</label>
+                <input type="date" id="dob" name="dob" required class="form-control">
             </div>
-            <div class="flex justify-center">
-                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md">Submit</button>
-            </div>
+            <button type="submit" class="btn btn-primary btn-block">Submit</button>
         </form>
     </div>
 
-    <div id="message-container" class="hidden text-center text-white text-4xl font-bold p-6 rounded-lg shadow-lg bg-gray-800">
+    <!-- Message Container -->
+    <div id="message-container" class="hidden text-center text-white text-4xl font-weight-bold p-5 rounded-lg shadow-lg" style="z-index: 20;">
         <p id="message" class="text-animation"></p>
-        <div id="confetti" class="hidden"></div>
+        <canvas id="confetti" class="confetti-canvas"></canvas>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti"></script>
+    <!-- Bootstrap JS and Dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
     <script>
         document.getElementById('birthday-form').addEventListener('submit', function(event) {
             event.preventDefault();
@@ -69,11 +88,12 @@
             
             // Display message
             const messageElement = document.getElementById('message');
-            messageElement.innerHTML = `<p>Hello my friend,</p><p class="text-5xl mt-4">Happy Birthday, ${name}!</p><p class="mt-2">Celebrating you on ${dob}</p>`;
+            messageElement.innerHTML = `<p>Hello my friend,</p><p class="display-4 mt-4">Happy Birthday, ${name}!</p><p class="mt-2">Celebrating you on ${dob}</p>`;
 
             // Confetti effect
+            const confettiCanvas = document.getElementById('confetti');
+            const confetti = canvasConfetti.create(confettiCanvas, { resize: true });
             setTimeout(() => {
-                const confetti = canvasConfetti;
                 confetti({
                     particleCount: 100,
                     spread: 70,
