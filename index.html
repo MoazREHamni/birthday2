@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Wish</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.2.4/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .hidden {
+            display: none;
+        }
+        .text-animation {
+            animation: textAnimation 2s forwards;
+        }
+        @keyframes textAnimation {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .bg-animation {
+            animation: bgAnimation 10s infinite;
+        }
+        @keyframes bgAnimation {
+            0% { background-color: #ff9a9e; }
+            50% { background-color: #fad0c4; }
+            100% { background-color: #ff9a9e; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div id="form-container" class="w-full max-w-lg mx-auto p-6 bg-white rounded-lg shadow-lg">
+        <h2 class="text-2xl font-bold mb-4 text-center">Happy Birthday!</h2>
+        <form id="birthday-form">
+            <div class="mb-4">
+                <label for="name" class="block text-gray-700">Name:</label>
+                <input type="text" id="name" name="name" required class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div class="mb-4">
+                <label for="dob" class="block text-gray-700">Date of Birth:</label>
+                <input type="date" id="dob" name="dob" required class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div class="flex justify-center">
+                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <div id="message-container" class="hidden text-center text-white text-4xl font-bold p-6 rounded-lg shadow-lg bg-gray-800">
+        <p id="message" class="text-animation"></p>
+        <div id="confetti" class="hidden"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti"></script>
+    <script>
+        document.getElementById('birthday-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Get form values
+            const name = document.getElementById('name').value;
+            const dob = new Date(document.getElementById('dob').value).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+
+            // Hide form
+            document.getElementById('form-container').classList.add('hidden');
+
+            // Show message container
+            const messageContainer = document.getElementById('message-container');
+            messageContainer.classList.remove('hidden');
+            document.body.classList.add('bg-animation');
+            
+            // Display message
+            const messageElement = document.getElementById('message');
+            messageElement.innerHTML = `<p>Hello my friend,</p><p class="text-5xl mt-4">Happy Birthday, ${name}!</p><p class="mt-2">Celebrating you on ${dob}</p>`;
+
+            // Confetti effect
+            setTimeout(() => {
+                const confetti = canvasConfetti;
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }, 500);
+        });
+    </script>
+</body>
+</html>
